@@ -28,6 +28,13 @@
                     <attribute name="string">Төлөв</attribute>
                 </xpath>
 
+                <xpath expr="//field[@name='amount_total_in_currency_signed']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='activity_ids']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
                 <!-- Төлөгдсөн дүн багана нэмэх -->
                 <xpath expr="//field[@name='amount_total_signed']" position="after">
                     <field name="amount_paid" string="Төлөгдсөн дүн" sum="Нийт төлөгдсөн"/>

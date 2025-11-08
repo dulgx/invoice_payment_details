@@ -7,25 +7,26 @@ RUN apt-get update && \
     apt-get install -y gettext postgresql-client && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy custom addons
-COPY ./addons /mnt/extra-addons
+# Create custom addons directory
+RUN mkdir -p /mnt/extra-addons/invoice_payment_details
+
+# Copy the entire module to the custom addons directory
+COPY . /mnt/extra-addons/invoice_payment_details/
 
 # Copy Odoo configuration file
-COPY ./odoo.conf /etc/odoo/odoo.conf
+COPY odoo.conf /etc/odoo/odoo.conf
 
-# Copy custom entrypoint script
-COPY ./entrypoint.sh /entrypoint-custom.sh
-RUN chmod +x /entrypoint-custom.sh
-
-# Copy and install additional Python dependencies
-COPY ./requirements.txt /tmp/requirements.txt
-RUN pip3 install --no-cache-dir -r /tmp/requirements.txt || true
+# Copy and set up the entrypoint script
+COPY railway-entrypoint.sh /railway-entrypoint.sh
+RUN chmod +x /railway-entrypoint.sh
 
 # Set proper permissions
-RUN chown -R odoo:odoo /mnt/extra-addons
+RUN chown -R odoo:odoo /mnt/extra-addons/invoice_payment_details
+RUN chown odoo:odoo /etc/odoo/odoo.conf
 
 USER odoo
 
 EXPOSE 8069
 
 ENTRYPOINT ["/railway-entrypoint.sh"]
+CMD ["odoo"]

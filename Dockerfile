@@ -17,8 +17,8 @@ COPY . /mnt/extra-addons/invoice_payment_details/
 COPY odoo.conf /etc/odoo/odoo.conf
 
 # Copy and set up the entrypoint script
-COPY railway-entrypoint.sh /railway-entrypoint.sh
-RUN chmod +x /railway-entrypoint.sh
+COPY railway-entrypoint.sh /usr/local/bin/railway-entrypoint.sh
+RUN chmod +x /usr/local/bin/railway-entrypoint.sh
 
 # Set proper permissions
 RUN chown -R odoo:odoo /mnt/extra-addons/invoice_payment_details
@@ -28,5 +28,5 @@ USER odoo
 
 EXPOSE 8069
 
-ENTRYPOINT ["/railway-entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/railway-entrypoint.sh"]
 CMD ["odoo"]

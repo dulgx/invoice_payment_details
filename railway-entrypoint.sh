@@ -34,7 +34,7 @@ wait_for_postgres() {
     echo "Waiting for PostgreSQL to be ready..."
     MAX_TRIES=30
     COUNT=0
-    
+
     until PGPASSWORD=$DB_PASSWORD psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d postgres -c '\q' 2>/dev/null; do
         COUNT=$((COUNT + 1))
         if [ $COUNT -ge $MAX_TRIES ]; then
@@ -45,6 +45,28 @@ wait_for_postgres() {
         sleep 2
     done
     echo "✅ PostgreSQL is ready!"
+}
+
+# Function to create odoo user if using postgres superuser
+create_odoo_user() {
+    if [ "$DB_USER" = "postgres" ]; then
+        echo "Detected 'postgres' superuser - creating dedicated 'odoo' user..."
+
+        # Check if odoo user already exists
+        USER_EXISTS=$(PGPASSWORD=$DB_PASSWORD psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='odoo'" 2>/dev/null || echo "0")
+
+        if [ "$USER_EXISTS" != "1" ]; then
+            echo "Creating 'odoo' database user..."
+            PGPASSWORD=$DB_PASSWORD psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d postgres -c "CREATE USER odoo WITH PASSWORD '${DB_PASSWORD}' CREATEDB"
+            echo "✅ User 'odoo' created!"
+        else
+            echo "✅ User 'odoo' already exists"
+        fi
+
+        # Update DB_USER to use odoo instead of postgres
+        export DB_USER="odoo"
+        echo "✅ Switched to using 'odoo' user for Odoo operations"
+    fi
 }
 
 # Function to create database
@@ -112,6 +134,10 @@ echo ""
 
 # Wait for PostgreSQL
 wait_for_postgres
+echo ""
+
+# Create odoo user if needed (Railway uses postgres superuser by default)
+create_odoo_user
 echo ""
 
 # Create database

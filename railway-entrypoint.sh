@@ -1,6 +1,37 @@
 #!/bin/bash
 set -e
 
+# Function to parse DATABASE_URL if individual vars are not set
+parse_database_url() {
+    if [ -n "$DATABASE_URL" ]; then
+        echo "Parsing DATABASE_URL..."
+
+        # Extract components using parameter expansion and sed
+        # Format: postgresql://user:password@host:port/database
+
+        # Remove the protocol part
+        DB_URL_NO_PROTOCOL="${DATABASE_URL#postgresql://}"
+
+        # Extract user and password
+        DB_USER_PASS="${DB_URL_NO_PROTOCOL%%@*}"
+        export DB_USER="${DB_USER_PASS%%:*}"
+        export DB_PASSWORD="${DB_USER_PASS#*:}"
+
+        # Extract host, port, and database
+        DB_HOST_PORT_DB="${DB_URL_NO_PROTOCOL#*@}"
+        DB_HOST_PORT="${DB_HOST_PORT_DB%%/*}"
+        export DB_HOST="${DB_HOST_PORT%%:*}"
+        export DB_PORT="${DB_HOST_PORT#*:}"
+        export DB_NAME="${DB_HOST_PORT_DB#*/}"
+
+        echo "Parsed database connection from DATABASE_URL"
+        echo "DB_HOST: $DB_HOST"
+        echo "DB_PORT: $DB_PORT"
+        echo "DB_USER: $DB_USER"
+        echo "DB_NAME: $DB_NAME"
+    fi
+}
+
 # Function to wait for PostgreSQL to be ready
 wait_for_postgres() {
     echo "Waiting for PostgreSQL to be ready..."
@@ -45,6 +76,9 @@ substitute_env_vars() {
 # Main execution
 echo "Starting Odoo Railway Deployment..."
 echo "=================================="
+
+# Parse DATABASE_URL if provided (Railway standard)
+parse_database_url
 
 # Check required environment variables
 REQUIRED_VARS=("DB_HOST" "DB_PORT" "DB_USER" "DB_PASSWORD" "DB_NAME" "ADMIN_PASSWORD")

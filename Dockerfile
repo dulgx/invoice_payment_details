@@ -28,4 +28,4 @@ USER odoo
 
 EXPOSE 8069
 
-ENTRYPOINT ["/entrypoint-custom.sh"]
+ENTRYPOINT ["/railway-entrypoint.sh"]

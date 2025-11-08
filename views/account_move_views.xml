@@ -9,9 +9,42 @@
             <field name="model">account.move</field>
             <field name="inherit_id" ref="account.view_invoice_tree"/>
             <field name="arch" type="xml">
+
+                <!-- Харилцагчийн нэр  -->
+                <xpath expr="//field[@name='invoice_partner_display_name'][@string='Customer']" position="attributes">
+                    <attribute name="string">Харилцагч</attribute>
+                </xpath>
+
+
+                <!-- Нэхэмжлэхийн огноо -->
+                <xpath expr="//field[@name='invoice_date'][@string='Invoice Date']" position="attributes">
+                    <attribute name="string">Огноо</attribute>
+                </xpath>
+
+
+                <!-- Компани -->
+                <xpath expr="//field[@name='company_id'][@optional='hide']" position="attributes">
+                    <attribute name="string">Компани</attribute>
+                </xpath>
+
+
+                <!-- Нийт дүн -->
+                <xpath expr="//field[@name='amount_total_signed'][@string='Total']" position="attributes">
+                    <attribute name="string">Нийт дүн</attribute>
+                    <attribute name="sum">Нийт</attribute>
+                </xpath>
+
+
+                <!-- Төлөв -->
+                <xpath expr="//field[@name='state']" position="attributes">
+                    <attribute name="string">Төлөв</attribute>
+                </xpath>
+
+                
+
                 <!-- Төлөгдсөн дүн багана нэмэх -->
                 <xpath expr="//field[@name='amount_total_signed']" position="after">
-                    <field name="amount_paid" sum="Нийт төлөгдсөн"/>
+                    <field name="amount_paid" string="Төлөгдсөн дүн" sum="Нийт төлөгдсөн"/>
                 </xpath>
 
                 <!-- Төлбөрийн түүх харах товч нэмэх -->

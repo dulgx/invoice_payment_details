@@ -64,13 +64,13 @@ create_database_if_not_exists() {
 # Function to substitute environment variables using envsubst
 substitute_env_vars() {
     echo "Substituting environment variables in odoo.conf..."
-    
+
     # Export all variables for envsubst
     export DB_HOST DB_PORT DB_USER DB_PASSWORD DB_NAME ADMIN_PASSWORD
-    
-    # Use envsubst to replace variables
-    envsubst < /etc/odoo/odoo.conf > /tmp/odoo.conf
-    
+
+    # Use envsubst to replace variables from template
+    envsubst < /tmp/odoo.conf.template > /tmp/odoo.conf
+
     echo "✅ Configuration file prepared!"
     echo ""
     echo "Database configuration:"

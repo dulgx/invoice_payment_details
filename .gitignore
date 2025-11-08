@@ -1,0 +1,8 @@
+.DS_Store
+*.py[cod]
+__pycache__/
+*.log
+*.pot
+*.mo
+*.swp
+*.swo

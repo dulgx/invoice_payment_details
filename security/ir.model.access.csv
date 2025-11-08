@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_payment_history_wizard_accountant,payment.history.wizard.accountant,model_payment_history_wizard,invoice_payment_details.group_invoice_payment_accountant,1,0,1,0
+access_payment_history_line_accountant,payment.history.line.accountant,model_payment_history_line,invoice_payment_details.group_invoice_payment_accountant,1,0,1,0
+access_payment_history_wizard_account_invoice,payment.history.wizard.account.invoice,model_payment_history_wizard,account.group_account_invoice,1,0,1,0
+access_payment_history_line_account_invoice,payment.history.line.account.invoice,model_payment_history_line,account.group_account_invoice,1,0,1,0

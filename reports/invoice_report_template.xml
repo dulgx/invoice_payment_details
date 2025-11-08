@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--
+            Нэхэмжлэхийн PDF тайланд төлбөрийн түүх нэмэх
+        -->
+        <template id="report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+            <xpath expr="//div[@id='informations']" position="after">
+                <!-- Төлбөрийн түүхийн хүснэгт -->
+                <div class="row mt-4" t-if="o.amount_paid &gt; 0">
+                    <div class="col-12">
+                        <h5>Төлбөрийн түүх</h5>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Огноо</th>
+                                    <th>Дүн</th>
+                                    <th>Журнал</th>
+                                    <th>Тайлбар</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Нэхэмжлэхд хийгдсэн төлөлтүүдийг авах -->
+                                <t t-set="payments" t-value="o._get_reconciled_payments()"/>
+                                <tr t-foreach="payments" t-as="payment">
+                                    <td><span t-field="payment.date"/></td>
+                                    <td><span t-field="payment.amount"/></td>
+                                    <td><span t-field="payment.journal_id.name"/></td>
+                                    <td><span t-esc="payment.ref or payment.name"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Нийт төлөгдсөн дүн  -->
+                        <div class="row">
+                            <div class="col-6">
+                                <strong>Нийт төлөгдсөн:</strong>
+                            </div>
+                            <div class="col-6 text-right">
+                                <strong><span t-field="o.amount_paid" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--
+            Төлбөрийн түүх харуулах wizard form
+            Payment history display wizard form
+        -->
+        <record id="view_payment_history_wizard_form" model="ir.ui.view">
+            <field name="name">payment.history.wizard.form</field>
+            <field name="model">payment.history.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Төлбөрийн түүх">
+                    <sheet>
+                        <!-- Нэхэмжлэхийн мэдээлэл / Invoice information -->
+                        <group>
+                            <field name="invoice_id" readonly="1"/>
+                        </group>
+
+                        <!-- Төлбөрийн түүхийн жагсаалт / Payment history list -->
+                        <notebook>
+                            <page string="Төлбөрийн түүх">
+                                <field name="payment_line_ids" readonly="1">
+                                    <tree string="Төлбөрүүд" create="false" edit="false" delete="false" open="false">
+                                        <field name="payment_date"/>
+                                        <field name="amount"/>
+                                        <field name="journal_name"/>
+                                        <field name="ref"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <footer>
+                        <button string="Хаах" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

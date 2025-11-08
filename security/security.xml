@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--
+            Аюулгүй байдлын тохиргоо / Security Configuration
+            Төлбөрийн түүх харах эрхийг зөвхөн нягтлан бодогчдад олгоно
+        -->
+
+        <!-- Эрхийн бүлгүүд / Security Groups -->
+
+        <!-- Үндсэн хэрэглэгч / Employee Group -->
+        <record id="group_invoice_payment_employee" model="res.groups">
+            <field name="name">Ажилтан</field>
+            <field name="category_id" ref="base.module_category_accounting"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <!-- Нягтлан бодогч / Accountant Group -->
+        <record id="group_invoice_payment_accountant" model="res.groups">
+            <field name="name">Ерөнхий нягтлан бодогч</field>
+            <field name="category_id" ref="base.module_category_accounting"/>
+            <!-- Нэхэмжлэх болон ажилтны эрхийг автоматаар олгоно -->
+            <field name="implied_ids" eval="[(4, ref('account.group_account_invoice')), (4, ref('invoice_payment_details.group_invoice_payment_employee'))]"/>
+        </record>
+
+        <!-- Record Rules / Бичлэгийн дүрэм -->
+
+        <!-- Зөвхөн нягтлан бодогч wizard-ийг үзэх эрхтэй -->
+        <record id="payment_history_wizard_accountant_rule" model="ir.rule">
+            <field name="name">Payment History Wizard: Accountant Only</field>
+            <field name="model_id" ref="model_payment_history_wizard"/>
+            <field name="groups" eval="[(4, ref('invoice_payment_details.group_invoice_payment_accountant'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- Зөвхөн нягтлан бодогч төлбөрийн мөрүүдийг үзэх эрхтэй -->
+        <record id="payment_history_line_accountant_rule" model="ir.rule">
+            <field name="name">Payment History Line: Accountant Only</field>
+            <field name="model_id" ref="model_payment_history_line"/>
+            <field name="groups" eval="[(4, ref('invoice_payment_details.group_invoice_payment_accountant'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

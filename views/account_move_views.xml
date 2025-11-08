@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--
+            Нэхэмжлэхийн жагсаалтад төлөгдсөн дүн болон дэлгэрэнгүй товч нэмэх
+        -->
+        <record id="view_invoice_tree_inherit" model="ir.ui.view">
+            <field name="name">account.move.tree.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_invoice_tree"/>
+            <field name="arch" type="xml">
+                <!-- Төлөгдсөн дүн багана нэмэх -->
+                <xpath expr="//field[@name='amount_total_signed']" position="after">
+                    <field name="amount_paid" sum="Нийт төлөгдсөн"/>
+                </xpath>
+
+                <!-- Төлбөрийн түүх харах товч нэмэх -->
+                <xpath expr="//tree" position="inside">
+                    <button name="action_view_payment_history"
+                            type="object"
+                            string="Дэлгэрэнгүй"
+                            icon="fa-list"
+                            groups="invoice_payment_details.group_invoice_payment_accountant"
+                            attrs="{'invisible': [('move_type', 'not in', ['out_invoice', 'in_invoice'])]}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,40 @@
+# Git
+.git
+.gitignore
+.github
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Documentation (already in image)
+README.md
+README-RAILWAY.md
+
+# Local development files
+*.local
+.env.local

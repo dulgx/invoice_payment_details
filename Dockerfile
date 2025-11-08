@@ -1,36 +1,31 @@
 FROM odoo:16.0
 
-# Switch to root to install system dependencies
 USER root
 
-# Install additional system dependencies if needed
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    git \
-    && rm -rf /var/lib/apt/lists/*
+# Install gettext for envsubst and postgresql-client
+RUN apt-get update && \
+    apt-get install -y gettext postgresql-client && \
+    rm -rf /var/lib/apt/lists/*
 
-# Create custom addons directory
-RUN mkdir -p /mnt/extra-addons/invoice_payment_details
+# Copy custom addons
+COPY ./addons /mnt/extra-addons
 
-# Copy the entire module to the custom addons directory
-COPY . /mnt/extra-addons/invoice_payment_details/
+# Copy Odoo configuration file
+COPY ./odoo.conf /etc/odoo/odoo.conf
 
-# Copy the Railway entrypoint script
-COPY railway-entrypoint.sh /usr/local/bin/railway-entrypoint.sh
-RUN chmod +x /usr/local/bin/railway-entrypoint.sh
+# Copy custom entrypoint script
+COPY ./entrypoint.sh /entrypoint-custom.sh
+RUN chmod +x /entrypoint-custom.sh
 
-# Copy custom Odoo configuration
-COPY odoo.conf /etc/odoo/odoo.conf
+# Copy and install additional Python dependencies
+COPY ./requirements.txt /tmp/requirements.txt
+RUN pip3 install --no-cache-dir -r /tmp/requirements.txt || true
 
-# Set proper ownership
-RUN chown -R odoo:odoo /mnt/extra-addons/invoice_payment_details
-RUN chown odoo:odoo /etc/odoo/odoo.conf
+# Set proper permissions
+RUN chown -R odoo:odoo /mnt/extra-addons
 
-# Switch back to odoo user
 USER odoo
 
-# Expose Odoo port
 EXPOSE 8069
 
-# Use custom entrypoint
-ENTRYPOINT ["/usr/local/bin/railway-entrypoint.sh"]
-CMD ["odoo"]
+ENTRYPOINT ["/entrypoint-custom.sh"]

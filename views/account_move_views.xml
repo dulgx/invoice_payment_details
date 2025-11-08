@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!--
-            Нэхэмжлэхийн жагсаалтад төлөгдсөн дүн болон дэлгэрэнгүй товч нэмэх
-        -->
         <record id="view_invoice_tree_inherit" model="ir.ui.view">
             <field name="name">account.move.tree.inherit</field>
             <field name="model">account.move</field>
@@ -40,7 +37,7 @@
                     <attribute name="string">Төлөв</attribute>
                 </xpath>
 
-                
+
 
                 <!-- Төлөгдсөн дүн багана нэмэх -->
                 <xpath expr="//field[@name='amount_total_signed']" position="after">

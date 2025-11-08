@@ -69,18 +69,37 @@ create_odoo_user() {
     fi
 }
 
-# Function to create database
+# Function to create database and grant permissions
 create_database_if_not_exists() {
+    # Store original user (postgres) for admin operations
+    POSTGRES_USER="postgres"
+
     echo "Checking if database '$DB_NAME' exists..."
-    DB_EXISTS=$(PGPASSWORD=$DB_PASSWORD psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d postgres -tAc "SELECT 1 FROM pg_database WHERE datname='$DB_NAME'" 2>/dev/null || echo "0")
+    DB_EXISTS=$(PGPASSWORD=$DB_PASSWORD psql -h "$DB_HOST" -p "$DB_PORT" -U "$POSTGRES_USER" -d postgres -tAc "SELECT 1 FROM pg_database WHERE datname='$DB_NAME'" 2>/dev/null || echo "0")
 
     if [ "$DB_EXISTS" != "1" ]; then
         echo "Creating database '$DB_NAME'..."
-        PGPASSWORD=$DB_PASSWORD psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d postgres -c "CREATE DATABASE \"$DB_NAME\""
+        PGPASSWORD=$DB_PASSWORD psql -h "$DB_HOST" -p "$DB_PORT" -U "$POSTGRES_USER" -d postgres -c "CREATE DATABASE \"$DB_NAME\" OWNER odoo"
         echo "✅ Database created!"
     else
         echo "✅ Database already exists"
+        # Ensure odoo user owns the database
+        echo "Ensuring odoo user has proper ownership..."
+        PGPASSWORD=$DB_PASSWORD psql -h "$DB_HOST" -p "$DB_PORT" -U "$POSTGRES_USER" -d postgres -c "ALTER DATABASE \"$DB_NAME\" OWNER TO odoo" 2>/dev/null || true
     fi
+
+    # Grant all privileges on the database to odoo user
+    echo "Granting permissions to odoo user..."
+    PGPASSWORD=$DB_PASSWORD psql -h "$DB_HOST" -p "$DB_PORT" -U "$POSTGRES_USER" -d postgres -c "GRANT ALL PRIVILEGES ON DATABASE \"$DB_NAME\" TO odoo"
+
+    # Grant schema permissions
+    PGPASSWORD=$DB_PASSWORD psql -h "$DB_HOST" -p "$DB_PORT" -U "$POSTGRES_USER" -d "$DB_NAME" -c "GRANT ALL ON SCHEMA public TO odoo"
+    PGPASSWORD=$DB_PASSWORD psql -h "$DB_HOST" -p "$DB_PORT" -U "$POSTGRES_USER" -d "$DB_NAME" -c "GRANT ALL ON ALL TABLES IN SCHEMA public TO odoo"
+    PGPASSWORD=$DB_PASSWORD psql -h "$DB_HOST" -p "$DB_PORT" -U "$POSTGRES_USER" -d "$DB_NAME" -c "GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO odoo"
+    PGPASSWORD=$DB_PASSWORD psql -h "$DB_HOST" -p "$DB_PORT" -U "$POSTGRES_USER" -d "$DB_NAME" -c "ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO odoo"
+    PGPASSWORD=$DB_PASSWORD psql -h "$DB_HOST" -p "$DB_PORT" -U "$POSTGRES_USER" -d "$DB_NAME" -c "ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO odoo"
+
+    echo "✅ Permissions granted!"
 }
 
 # Function to substitute environment variables using envsubst

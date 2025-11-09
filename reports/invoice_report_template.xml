@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!--
-            Нэхэмжлэхийн PDF тайланд төлбөрийн түүх нэмэх
-        -->
         <template id="report_invoice_document_inherit" inherit_id="account.report_invoice_document">
             <xpath expr="//div[@id='informations']" position="after">
-                <!-- Төлбөрийн түүхийн хүснэгт -->
                 <div class="row mt-4" t-if="o.amount_paid &gt; 0">
                     <div class="col-12">
                         <h5>Төлбөрийн түүх</h5>

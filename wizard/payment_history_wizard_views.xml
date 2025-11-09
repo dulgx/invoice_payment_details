@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!--
-            Төлбөрийн түүх харуулах wizard form
-            Payment history display wizard form
-        -->
         <record id="view_payment_history_wizard_form" model="ir.ui.view">
             <field name="name">payment.history.wizard.form</field>
             <field name="model">payment.history.wizard</field>

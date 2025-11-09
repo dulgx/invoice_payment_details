@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-"""Төлбөрийн түүх харуулах wizard / Payment history wizard"""
 
 from odoo import models, fields, api
 

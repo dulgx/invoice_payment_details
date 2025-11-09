@@ -7,6 +7,7 @@
             <field name="inherit_id" ref="account.view_invoice_tree"/>
             <field name="arch" type="xml">
 
+                <!-- Талбаруудын зарим нэрийг монгол хэл дээр өгөв -->
                 <xpath expr="//field[@name='invoice_partner_display_name']" position="attributes">
                     <attribute name="string">Харилцагч</attribute>
                 </xpath>

@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!--
-            Ажилтан бүлэгт нэхэмжлэхийн төлбөрийн мэдээллийг нуух
-            Hide payment details from employee group
-        -->
-
         <!-- Нэхэмжлэхийн form view дээрх төлбөрийн мэдээллийг нуух -->
         <record id="view_move_form_hide_payment_details" model="ir.ui.view">
             <field name="name">account.move.form.hide.payment.details</field>

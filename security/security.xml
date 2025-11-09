@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!--
-            Аюулгүй байдлын тохиргоо / Security Configuration
-            Төлбөрийн түүх харах эрхийг зөвхөн нягтлан бодогчдад олгоно
-        -->
-
-        <!-- Эрхийн бүлгүүд / Security Groups -->
-
         <!-- Үндсэн хэрэглэгч / Employee Group -->
         <record id="group_invoice_payment_employee" model="res.groups">
             <field name="name">Ажилтан</field>

@@ -179,11 +179,12 @@ if [ "$UPDATE_MODULE" = "true" ]; then
     /usr/bin/odoo -c /tmp/odoo.conf -u invoice_payment_details --stop-after-init
     echo ""
 fi
+
 # Regenerate assets if requested
 if [ "$REGENERATE_ASSETS" = "true" ]; then
-    echo "Regenerating web assets..."
-    /usr/bin/odoo -c /tmp/odoo.conf -u web --stop-after-init
-    echo "✅ Assets regenerated!"
+    echo "Clearing asset cache from database..."
+    PGPASSWORD=$DB_PASSWORD psql -h "$DB_HOST" -p "$DB_PORT" -U "postgres" -d "$DB_NAME" -c "DELETE FROM ir_attachment WHERE url LIKE '/web/assets/%';" 2>&1
+    echo "✅ Asset cache cleared! Assets will regenerate on first access."
     echo ""
 fi
 

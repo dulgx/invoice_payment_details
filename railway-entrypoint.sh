@@ -179,6 +179,13 @@ if [ "$UPDATE_MODULE" = "true" ]; then
     /usr/bin/odoo -c /tmp/odoo.conf -u invoice_payment_details --stop-after-init
     echo ""
 fi
+# Regenerate assets if requested
+if [ "$REGENERATE_ASSETS" = "true" ]; then
+    echo "Regenerating web assets..."
+    /usr/bin/odoo -c /tmp/odoo.conf -u web --stop-after-init
+    echo "✅ Assets regenerated!"
+    echo ""
+fi
 
 # Start Odoo
 echo "=========================================="
